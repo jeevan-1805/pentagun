@@ -1,61 +1,47 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+// src/app/index.tsx
+import React from 'react';
+import { router } from 'expo-router';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
 
 export default function HomeScreen() {
+  const handleCreateRoom = () => {
+    router.push('/create-room');
+    // We will hook up navigation to the Create Room screen next
+    console.log('Navigate to Create Room');
+  };
+
+  const handleJoinRoom = () => {
+    router.push('/join-room');
+    // We will hook up navigation to the Join Room screen next
+    console.log('Navigate to Join Room');
+  };
+
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
+        {/* Title Section */}
+        <View style={styles.heroSection}>
           <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
+            PentaGun
           </ThemedText>
-        </ThemedView>
+          <ThemedText style={styles.subtitle}>
+            Multiplayer Turn-Based Survival
+          </ThemedText>
+        </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+        {/* Action Buttons */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={handleCreateRoom}>
+            <ThemedText style={styles.buttonText}>Create Room</ThemedText>
+          </TouchableOpacity>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
+          <TouchableOpacity style={[styles.button, styles.secondaryButton]} onPress={handleJoinRoom}>
+            <ThemedText style={styles.buttonText}>Join Room</ThemedText>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </ThemedView>
   );
@@ -65,34 +51,52 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    flexDirection: 'row',
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    paddingHorizontal: 24,
+    paddingVertical: 48,
   },
   heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
   },
   title: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    letterSpacing: 2,
+  },
+  subtitle: {
+    fontSize: 16,
+    opacity: 0.7,
     textAlign: 'center',
   },
-  code: {
-    textTransform: 'uppercase',
+  buttonContainer: {
+    width: '100%',
+    gap: 16,
+    paddingBottom: 32,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  button: {
+    width: '100%',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  primaryButton: {
+    backgroundColor: '#E63946', // Vibrant accent color suitable for a gun/survival theme
+  },
+  secondaryButton: {
+    backgroundColor: '#1D3557', // Clean dark contrast button
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
